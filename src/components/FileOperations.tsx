@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { FileSystemManager } from '../utils/fileSystem'
 import type { RecentFile } from '../utils/fileSystem'
 import './FileOperations.css'
@@ -13,17 +13,17 @@ interface FileOperationsProps {
 export function FileOperations({ onFileOpen, onNewFile, fileManager, currentFileName }: FileOperationsProps) {
   const [recentFiles, setRecentFiles] = useState<RecentFile[]>([])
 
-  useEffect(() => {
-    loadRecentFiles()
-  }, [])
-
-  const loadRecentFiles = async () => {
+  const loadRecentFiles = useCallback(async () => {
     const files = await fileManager.getRecentFiles()
     setRecentFiles(files)
-  }
+  }, [fileManager])
+
+  useEffect(() => {
+    loadRecentFiles()
+  }, [loadRecentFiles])
 
   const handleNewFile = async () => {
-    const content = await fileManager.newFile()
+    await fileManager.newFile()
     onNewFile()
     await loadRecentFiles()
   }

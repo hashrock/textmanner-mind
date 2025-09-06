@@ -94,14 +94,14 @@ function App() {
     setNodes(newNodes)
   }, [text])
 
-  // Get textarea ref after component mounts
+  // Get textarea ref after component mounts and when showWelcome changes
   useEffect(() => {
     // Access the textarea through the editor's DOM
     const textarea = document.querySelector('textarea') as HTMLTextAreaElement
     if (textarea) {
       textareaRef.current = textarea
     }
-  }, [])
+  }, [showWelcome])
 
   const {
     selectionState,

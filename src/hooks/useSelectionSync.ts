@@ -26,6 +26,7 @@ export function useSelectionSync(
     // Find the node at cursor position
     const activeNode = findNodeAtPosition(nodes, cursorPos)
     
+    
     setSelectionState({
       cursorPos,
       selectionStart,
@@ -62,7 +63,12 @@ export function useSelectionSync(
 
   // Calculate cursor position within a node
   const getCursorPositionInNode = useCallback((node: MindMapNode): number | null => {
-    const { cursorPos } = selectionState
+    const { cursorPos, activeNodeId } = selectionState
+    
+    // Only show cursor for the active node
+    if (activeNodeId !== node.id) {
+      return null
+    }
     
     // Use full line range if available, otherwise use trimmed range
     const lineStart = node.lineStartPos ?? node.startPos
@@ -72,11 +78,12 @@ export function useSelectionSync(
       // Calculate position relative to the text start (after leading spaces)
       const relativePos = cursorPos - node.startPos
       // Return the actual position in the node's text, clamped to text length
-      return Math.min(Math.max(0, relativePos), node.text.length)
+      const position = Math.min(Math.max(0, relativePos), node.text.length)
+      return position
     }
     
     return null
-  }, [selectionState, textareaRef])
+  }, [selectionState])
 
   // Calculate selection range within a node
   const getSelectionInNode = useCallback((node: MindMapNode): { start: number; end: number } | null => {
@@ -88,13 +95,13 @@ export function useSelectionSync(
       const start = Math.max(0, selectionStart - node.startPos)
       const end = Math.min(node.text.length, selectionEnd - node.startPos)
       
-      if (start <= end) {
+      if (start < end) {  // Only show when there's actual selection
         return { start, end }
       }
     }
     
     return null
-  }, [selectionState, textareaRef])
+  }, [selectionState])
 
   // Listen for selection changes
   useEffect(() => {

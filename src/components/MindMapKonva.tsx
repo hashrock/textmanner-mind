@@ -98,7 +98,7 @@ export const MindMapKonva: React.FC<MindMapKonvaProps> = ({
     stage.destroy()
     setTextWidths(widths)
     setCursorOffsets(offsets)
-  }, [nodes])
+  }, [nodes, selectionState])
 
   const handleNodeClick = useCallback((node: MindMapNode) => {
     if (onNodeClick) {
@@ -234,6 +234,8 @@ export const MindMapKonva: React.FC<MindMapKonvaProps> = ({
             // Get selection range for this node
             const selection = getSelectionInNode ? getSelectionInNode(node) : null
             const cursorPos = getCursorPositionInNode ? getCursorPositionInNode(node) : null
+            
+            // Node rendering calculation complete
 
             return (
               <Group
