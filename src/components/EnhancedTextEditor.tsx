@@ -120,6 +120,48 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
         const lineStartPos = currentPos
         const posInLine = selectionStart - lineStartPos
         
+        // Special handling for backspace at the beginning of a line with only spaces before text
+        if (selectionStart === selectionEnd && posInLine === 0 && lineIndex > 0) {
+          // Check if current line has content after spaces
+          const trimmedLine = currentLine.trimStart()
+          if (trimmedLine.length > 0 && currentLine !== trimmedLine) {
+            // Line has indentation followed by text
+            e.preventDefault()
+            
+            // Merge with previous line, removing indentation
+            const prevLineEnd = lineStartPos - 1
+            const newValue = value.substring(0, prevLineEnd) + trimmedLine + value.substring(lineStartPos + currentLine.length)
+            onChange(newValue)
+            
+            setTimeout(() => {
+              textarea.setSelectionRange(prevLineEnd, prevLineEnd)
+            }, 0)
+            return
+          }
+        }
+        
+        // Special handling for cursor at the first non-space character
+        if (selectionStart === selectionEnd && posInLine > 0) {
+          const beforeCursor = currentLine.substring(0, posInLine)
+          const leadingSpaces = currentLine.match(/^(\s*)/)?.[1] || ''
+          
+          // If cursor is at the first non-space character and there are leading spaces
+          if (beforeCursor === leadingSpaces && leadingSpaces.length > 0 && lineIndex > 0) {
+            e.preventDefault()
+            
+            // Merge with previous line, removing all indentation
+            const prevLineEnd = lineStartPos - 1
+            const trimmedLine = currentLine.trimStart()
+            const newValue = value.substring(0, prevLineEnd) + trimmedLine + value.substring(lineStartPos + currentLine.length)
+            onChange(newValue)
+            
+            setTimeout(() => {
+              textarea.setSelectionRange(prevLineEnd, prevLineEnd)
+            }, 0)
+            return
+          }
+        }
+        
         // Special handling for whitespace-only lines
         if (selectionStart === selectionEnd) {
           // Check if current line is whitespace-only and cursor is at the end
