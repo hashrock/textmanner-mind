@@ -54,6 +54,67 @@ export const MindMapKonva: React.FC<MindMapKonvaProps> = ({
     return () => window.removeEventListener('resize', updateSize)
   }, [fullScreen])
 
+  // Auto-scroll to selected node when it changes
+  useEffect(() => {
+    if (!selectionState?.activeNodeId || !stageRef.current) return
+
+    // Find the active node
+    const activeNode = nodes.find(node => node.id === selectionState.activeNodeId)
+    if (!activeNode) return
+
+    const stage = stageRef.current
+    const stageWidth = stageSize.width
+    const stageHeight = stageSize.height
+    const scale = stageScale
+
+    // Calculate node bounds in stage coordinates
+    const nodeWidth = Math.max((textWidths.get(activeNode.id) || 100) + 40, 100)
+    const nodeHeight = 32
+    
+    // Transform node coordinates to screen coordinates considering current stage position and scale
+    const nodeScreenX = activeNode.x * scale + stagePosition.x
+    const nodeScreenY = (activeNode.y - nodeHeight / 2) * scale + stagePosition.y
+    const nodeScreenWidth = nodeWidth * scale
+    const nodeScreenHeight = nodeHeight * scale
+
+    // Check if node is fully visible
+    const padding = 50 // Padding from edges
+    const isVisible = 
+      nodeScreenX >= padding &&
+      nodeScreenX + nodeScreenWidth <= stageWidth - padding &&
+      nodeScreenY >= padding &&
+      nodeScreenY + nodeScreenHeight <= stageHeight - padding
+
+    if (!isVisible) {
+      // Calculate minimum movement to bring node into view
+      let targetX = stagePosition.x
+      let targetY = stagePosition.y
+
+      // Check horizontal bounds
+      if (nodeScreenX < padding) {
+        // Node is too far left, move right
+        targetX = padding - activeNode.x * scale
+      } else if (nodeScreenX + nodeScreenWidth > stageWidth - padding) {
+        // Node is too far right, move left
+        targetX = stageWidth - padding - (activeNode.x + nodeWidth) * scale
+      }
+
+      // Check vertical bounds
+      if (nodeScreenY < padding) {
+        // Node is too far up, move down
+        targetY = padding - (activeNode.y - nodeHeight / 2) * scale
+      } else if (nodeScreenY + nodeScreenHeight > stageHeight - padding) {
+        // Node is too far down, move up
+        targetY = stageHeight - padding - (activeNode.y + nodeHeight / 2) * scale
+      }
+
+      // Set position instantly without animation
+      stage.x(targetX)
+      stage.y(targetY)
+      setStagePosition({ x: targetX, y: targetY })
+    }
+  }, [selectionState?.activeNodeId, nodes, textWidths, stageSize, stageScale, stagePosition])
+
   // Measure text widths and character positions
   useEffect(() => {
     const widths = new Map<string, number>()
@@ -104,6 +165,7 @@ export const MindMapKonva: React.FC<MindMapKonvaProps> = ({
     if (onNodeClick) {
       onNodeClick(node)
     }
+    // The auto-scroll will be triggered by the selectionState change
   }, [onNodeClick])
 
   const handleNodeDoubleClick = useCallback((node: MindMapNode) => {
@@ -177,9 +239,18 @@ export const MindMapKonva: React.FC<MindMapKonvaProps> = ({
         draggable={true}
         onWheel={handleWheel}
         onDragEnd={(e) => {
+          const stage = e.currentTarget
           setStagePosition({
-            x: e.currentTarget.x(),
-            y: e.currentTarget.y()
+            x: stage.x(),
+            y: stage.y()
+          })
+        }}
+        onDragMove={(e) => {
+          const stage = e.currentTarget
+          // Update position during drag for smooth interaction
+          setStagePosition({
+            x: stage.x(),
+            y: stage.y()
           })
         }}
         x={stagePosition.x}
@@ -295,7 +366,7 @@ export const MindMapKonva: React.FC<MindMapKonvaProps> = ({
                       node.x + padding + (node.text.length === 0 ? 0 : (cursorOffsets.get(node.id)?.[cursorPos] || 0)),
                       node.y + 10
                     ]}
-                    stroke="#000000"
+                    stroke={isRoot ? "#ffffff" : "#000000"}
                     strokeWidth={1.5}
                     listening={false}
                   />
