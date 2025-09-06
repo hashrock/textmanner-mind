@@ -156,6 +156,34 @@ function App() {
     return () => document.removeEventListener('selectionchange', handleSelectionChange)
   }, [updateSelection])
 
+  // Handle keyboard shortcuts (Cmd+S / Ctrl+S for save)
+  useEffect(() => {
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      // Check for Cmd+S (Mac) or Ctrl+S (Windows/Linux)
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault()
+        
+        // Save the file
+        if (fileManager.getCurrentFileHandle()) {
+          // Save to existing file
+          await fileManager.saveFile(text)
+        } else if (text.length > 0) {
+          // Save as new file
+          const success = await fileManager.saveAsFile(text)
+          if (success) {
+            const handle = fileManager.getCurrentFileHandle()
+            if (handle) {
+              setCurrentFileName(handle.name)
+            }
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [fileManager, text])
+
   return (
     <div className="app-container">
       {showWelcome ? (
