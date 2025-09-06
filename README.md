@@ -1,69 +1,83 @@
-# React + TypeScript + Vite
+# TextManner: Mind
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+マインドマップをもっと気軽に作成できるテキストベースのマインドマップエディタ
 
-Currently, two official plugins are available:
+## 概要
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+TextManner: Mindは、テキストエディタの使い勝手とマインドマップの視覚的な表現を組み合わせた、シンプルで直感的なマインドマップ作成ツールです。
 
-## Expanding the ESLint configuration
+### 特徴
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **テキストベース**: インデントでマインドマップの階層構造を表現
+- **リアルタイム同期**: テキストの編集が即座にマインドマップビューに反映
+- **双方向編集**: マインドマップのノードをクリックするとテキストエディタの該当箇所にジャンプ
+- **ローカルファイル対応**: File System Access APIを使用してローカルファイルの読み込み・保存が可能
+- **自動保存**: 編集内容をIndexedDBに自動保存
+- **キーボードショートカット**: Cmd+S / Ctrl+S でファイル保存
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 使い方
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+### インストール
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# 依存関係のインストール
+pnpm install
+
+# 開発サーバーの起動
+pnpm dev
+
+# ビルド
+pnpm build
+
+# テスト実行
+pnpm test
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### テキストフォーマット
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+インデント（スペース2つ）を使って階層構造を表現します：
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+ルートノード
+  子ノード1
+    孫ノード1-1
+    孫ノード1-2
+  子ノード2
+    孫ノード2-1
+```
+
+### デモモード
+
+URLパラメータ `?demo=true` を追加することで、サンプルテキストが読み込まれたデモモードで起動できます。
+
+## 技術スタック
+
+- **フレームワーク**: React 19 + TypeScript
+- **ビルドツール**: Vite
+- **マインドマップ描画**: Konva.js / React Konva
+- **データ永続化**: IndexedDB (idb)
+- **テスト**: Vitest + Testing Library
+
+## プロジェクト構成
+
+```
+src/
+├── components/
+│   ├── EnhancedTextEditor.tsx  # テキストエディタコンポーネント
+│   ├── MindMapKonva.tsx        # マインドマップ表示コンポーネント
+│   └── FileOperations.tsx      # ファイル操作UI
+├── hooks/
+│   ├── useSelectionSync.ts     # テキスト選択とマインドマップの同期
+│   └── useAutoSave.ts          # 自動保存機能
+├── utils/
+│   ├── mindmapParser.ts        # テキストからノード構造への変換
+│   ├── textFormatter.ts        # テキストフォーマット処理
+│   └── fileSystem.ts           # ファイルシステム操作
+└── types/
+    └── MindMap.ts               # 型定義
+
+```
+
+## ライセンス
+
+MIT
