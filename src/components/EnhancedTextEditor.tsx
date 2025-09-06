@@ -91,6 +91,10 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
           
           // Set the new value with newline and proper indentation
           const newValue = beforeCursor + '\n' + indent + trimmedTextAfter + afterLine
+          
+          // Use execCommand to maintain undo history
+          textarea.select()
+          document.execCommand('insertText', false, newValue)
           onChange(newValue)
           
           // Position cursor at start of new line content
@@ -131,6 +135,10 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
             // Merge with previous line, removing indentation
             const prevLineEnd = lineStartPos - 1
             const newValue = value.substring(0, prevLineEnd) + trimmedLine + value.substring(lineStartPos + currentLine.length)
+            
+            // Use execCommand to maintain undo history
+            textarea.select()
+            document.execCommand('insertText', false, newValue)
             onChange(newValue)
             
             setTimeout(() => {
@@ -153,6 +161,10 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
             const prevLineEnd = lineStartPos - 1
             const trimmedLine = currentLine.trimStart()
             const newValue = value.substring(0, prevLineEnd) + trimmedLine + value.substring(lineStartPos + currentLine.length)
+            
+            // Use execCommand to maintain undo history
+            textarea.select()
+            document.execCommand('insertText', false, newValue)
             onChange(newValue)
             
             setTimeout(() => {
@@ -172,6 +184,10 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
             if (lineIndex > 0) {
               const prevLineEnd = currentPos - 1
               const newValue = value.substring(0, lineStartPos - 1) + value.substring(lineStartPos + currentLine.length)
+              
+              // Use execCommand to maintain undo history
+              textarea.select()
+              document.execCommand('insertText', false, newValue)
               onChange(newValue)
               setTimeout(() => {
                 textarea.setSelectionRange(prevLineEnd, prevLineEnd)
@@ -179,12 +195,18 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
             } else if (lineIndex < lines.length - 1) {
               // First line - remove it
               const newValue = value.substring(lineStartPos + currentLine.length + 1)
+              
+              // Use execCommand to maintain undo history
+              textarea.select()
+              document.execCommand('insertText', false, newValue)
               onChange(newValue)
               setTimeout(() => {
                 textarea.setSelectionRange(0, 0)
               }, 0)
             } else {
               // Only line - just clear it
+              textarea.select()
+              document.execCommand('insertText', false, '')
               onChange('')
             }
             return
@@ -217,6 +239,10 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
             if (lineIndex > 0) {
               const prevLineEnd = lineStartPos - 1
               const newValue = value.substring(0, lineStartPos - 1) + value.substring(lineStartPos + currentLine.length)
+              
+              // Use execCommand to maintain undo history
+              textarea.select()
+              document.execCommand('insertText', false, newValue)
               onChange(newValue)
               setTimeout(() => {
                 textarea.setSelectionRange(prevLineEnd, prevLineEnd)
@@ -224,12 +250,18 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
             } else if (lineIndex < lines.length - 1) {
               // First line - remove it
               const newValue = value.substring(lineStartPos + currentLine.length + 1)
+              
+              // Use execCommand to maintain undo history
+              textarea.select()
+              document.execCommand('insertText', false, newValue)
               onChange(newValue)
               setTimeout(() => {
                 textarea.setSelectionRange(0, 0)
               }, 0)
             } else {
               // Only line - just clear it
+              textarea.select()
+              document.execCommand('insertText', false, '')
               onChange('')
             }
             return
