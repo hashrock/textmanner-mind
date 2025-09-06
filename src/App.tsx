@@ -182,16 +182,25 @@ function App() {
               fullScreen={false}
             />
             <div className="file-info">
-              {currentFileName && (
+              {currentFileName ? (
                 <span className="file-name">{currentFileName}</span>
-              )}
-              {isDirty && !fileManager.getCurrentFileHandle() && (
-                <button 
-                  className="save-button"
-                  onClick={() => fileManager.saveAsFile(text)}
-                >
-                  Save
-                </button>
+              ) : (
+                isDirty && (
+                  <button 
+                    className="save-button"
+                    onClick={async () => {
+                      const success = await fileManager.saveAsFile(text)
+                      if (success) {
+                        const handle = fileManager.getCurrentFileHandle()
+                        if (handle) {
+                          setCurrentFileName(handle.name)
+                        }
+                      }
+                    }}
+                  >
+                    Save
+                  </button>
+                )
               )}
             </div>
           </div>
