@@ -347,8 +347,8 @@ export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedText
           onClick={handleCursorMovement}
           onCompositionStart={() => setIsComposing(true)}
           onCompositionEnd={() => setIsComposing(false)}
-          placeholder="マインドマップのテキストを入力してください。インデントで階層を表現します。"
-          aria-label="マインドマップテキストエディタ"
+          placeholder="Enter your mindmap text. Use indentation to create hierarchy."
+          aria-label="Mindmap text editor"
         />
       </div>
     )

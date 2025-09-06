@@ -1,0 +1,157 @@
+.file-operations {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.file-actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.file-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 2px solid #000;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.1s;
+  background: transparent;
+  box-shadow: none;
+  color: #000;
+}
+
+.file-button:hover {
+  background: #000;
+  color: #fff;
+}
+
+.file-button:hover .icon {
+  filter: grayscale(1) brightness(10);
+}
+
+.file-button .icon {
+  font-size: 16px;
+  filter: grayscale(1);
+}
+
+.new-file {
+  background: transparent;
+  color: #000;
+}
+
+.new-file:hover {
+  background: #000;
+  color: #fff;
+}
+
+.open-file {
+  background: transparent;
+  color: #000;
+}
+
+.open-file:hover {
+  background: #000;
+  color: #fff;
+}
+
+.current-file {
+  padding: 8px 0;
+  background: transparent;
+  border-radius: 0;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.current-file-label {
+  color: #666;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.current-file-name {
+  font-weight: 500;
+  color: #000;
+  letter-spacing: 0.2px;
+}
+
+.recent-files {
+  margin-top: 24px;
+}
+
+.recent-files h3 {
+  font-size: 11px;
+  color: #000;
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.recent-files-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-files-list li {
+  margin-bottom: 2px;
+}
+
+.recent-file-button {
+  width: 280px;
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #d0d0d0;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.1s;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.recent-file-button:hover {
+  background: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.recent-file-button:hover .file-icon,
+.recent-file-button:hover .file-name {
+  color: #fff;
+  filter: grayscale(1) brightness(10);
+}
+
+.file-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  filter: grayscale(1);
+}
+
+.file-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #000;
+  letter-spacing: 0.2px;
+}
