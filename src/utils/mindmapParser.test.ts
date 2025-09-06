@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { parseTextToNodes, findNodeAtPosition, findNodeAtLine } from './mindmapParser'
-import type { MindMapNode } from '../types/MindMap'
 
 describe('mindmapParser', () => {
   describe('parseTextToNodes with position tracking', () => {

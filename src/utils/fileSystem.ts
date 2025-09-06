@@ -147,9 +147,9 @@ export class FileSystemManager {
   async openRecentFile(file: RecentFile): Promise<{ content: string; handle: FileSystemFileHandle } | null> {
     try {
       const handle = file.handle
-      const permission = await handle.queryPermission({ mode: 'read' })
+      const permission = await handle.queryPermission?.({ mode: 'read' }) ?? 'prompt'
       
-      if (permission === 'granted' || (permission === 'prompt' && await handle.requestPermission({ mode: 'read' }) === 'granted')) {
+      if (permission === 'granted' || (permission === 'prompt' && await handle.requestPermission?.({ mode: 'read' }) === 'granted')) {
         const fileData = await handle.getFile()
         const content = await fileData.text()
         
@@ -206,12 +206,12 @@ export class FileSystemManager {
         }, `file-${i}`)
       }
       
-      await tx.complete
+      await tx.done
       
       // Also save as last opened file
       const lastTx = this.db.transaction('last-file', 'readwrite')
       await lastTx.objectStore('last-file').put(handle, 'last')
-      await lastTx.complete
+      await lastTx.done
     } catch (err) {
       console.error('Failed to save recent files:', err)
     }

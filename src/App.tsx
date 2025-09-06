@@ -33,7 +33,7 @@ function App() {
   
   const [nodes, setNodes] = useState<MindMapNode[]>([])
   const editorRef = useRef<EnhancedTextEditorRef>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null!)
   const [isFormatting, setIsFormatting] = useState(false)
   
   const fileManager = useMemo(() => new FileSystemManager(), [])

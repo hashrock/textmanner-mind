@@ -24,8 +24,7 @@ function getNodeWidth(text: string): number {
 
 // Phase 1: Calculate sizes bottom-up
 export function calculateNodeSizes(
-  nodes: MindMapNode[],
-  nodeMap: { [key: string]: MindMapNode }
+  nodes: MindMapNode[]
 ): Map<string, NodeLayout> {
   const layoutMap = new Map<string, NodeLayout>()
   
@@ -75,7 +74,6 @@ export function calculateNodeSizes(
 // Phase 2: Assign positions top-down
 export function assignNodePositions(
   nodes: MindMapNode[],
-  nodeMap: { [key: string]: MindMapNode },
   layoutMap: Map<string, NodeLayout>,
   startX: number = 100,
   startY: number = 300
@@ -95,7 +93,7 @@ export function assignNodePositions(
   // Recursively position children
   function positionChildren(parentId: string) {
     const parentLayout = layoutMap.get(parentId)
-    if (!parentLayout || !parentLayout.x || !parentLayout.y) return
+    if (!parentLayout || parentLayout.x === undefined || parentLayout.y === undefined) return
     
     const parent = parentLayout.node
     if (parent.children.length === 0) return
@@ -110,7 +108,7 @@ export function assignNodePositions(
       const child = childLayout.node
       
       // Position child to the right of parent (left-aligned)
-      childLayout.x = parentLayout.x + parentLayout.width + HORIZONTAL_GAP
+      childLayout.x = (parentLayout.x ?? 0) + parentLayout.width + HORIZONTAL_GAP
       
       // Center child vertically within its subtree space
       childLayout.y = currentY + childLayout.subtreeHeight / 2
@@ -132,14 +130,13 @@ export function assignNodePositions(
 
 // Main layout function
 export function layoutMindMap(
-  nodes: MindMapNode[],
-  nodeMap: { [key: string]: MindMapNode }
+  nodes: MindMapNode[]
 ): Map<string, NodeLayout> {
   // Phase 1: Calculate sizes
-  const layoutMap = calculateNodeSizes(nodes, nodeMap)
+  const layoutMap = calculateNodeSizes(nodes)
   
   // Phase 2: Assign positions
-  assignNodePositions(nodes, nodeMap, layoutMap)
+  assignNodePositions(nodes, layoutMap)
   
   return layoutMap
 }

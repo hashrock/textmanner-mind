@@ -10,21 +10,30 @@ describe('MindMapCanvas', () => {
       text: 'Root Node',
       x: 400,
       y: 300,
-      children: ['node_1', 'node_2']
+      children: ['node_1', 'node_2'],
+      lineNumber: 0,
+      startPos: 0,
+      endPos: 9
     },
     {
       id: 'node_1',
       text: 'Child 1',
       x: 250,
       y: 300,
-      children: []
+      children: [],
+      lineNumber: 1,
+      startPos: 10,
+      endPos: 17
     },
     {
       id: 'node_2',
       text: 'Child 2',
       x: 550,
       y: 300,
-      children: []
+      children: [],
+      lineNumber: 2,
+      startPos: 18,
+      endPos: 25
     }
   ]
 
@@ -134,7 +143,10 @@ describe('MindMapCanvas', () => {
         text: 'New Root',
         x: 400,
         y: 300,
-        children: []
+        children: [],
+        lineNumber: 0,
+        startPos: 0,
+        endPos: 8
       }
     ]
     

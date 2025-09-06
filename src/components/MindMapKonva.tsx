@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react'
-import { Stage, Layer, Ellipse, Rect, Text, Line, Group, Path } from 'react-konva'
+import { Stage, Layer, Rect, Text, Line, Group, Path } from 'react-konva'
 import type { MindMapNode, SelectionState } from '../types/MindMap'
 import Konva from 'konva'
 

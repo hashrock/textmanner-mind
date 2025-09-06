@@ -1,5 +1,5 @@
 import { useRef, useImperativeHandle, forwardRef, useState, useCallback } from 'react'
-import type { KeyboardEvent } from 'react'
+import type { KeyboardEvent, RefObject } from 'react'
 import { useTextEditor } from '../hooks/useTextEditor'
 import type { TextEditorAPI } from '../hooks/useTextEditor'
 
@@ -12,10 +12,10 @@ export interface EnhancedTextEditorRef extends TextEditorAPI {}
 
 export const EnhancedTextEditor = forwardRef<EnhancedTextEditorRef, EnhancedTextEditorProps>(
   ({ value, onChange }, ref) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null!)
     const [isComposing, setIsComposing] = useState(false)
     const previousPositionRef = useRef<number>(0)
-    const api = useTextEditor(textareaRef, value, onChange)
+    const api = useTextEditor(textareaRef as RefObject<HTMLTextAreaElement>, value, onChange)
     
     // Expose API through ref
     useImperativeHandle(ref, () => api, [api])

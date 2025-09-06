@@ -4,7 +4,7 @@ import type { MindMapNode, SelectionState } from '../types/MindMap'
 import { findNodeAtPosition } from '../utils/mindmapParser'
 
 export function useSelectionSync(
-  textareaRef: RefObject<HTMLTextAreaElement | null>,
+  textareaRef: RefObject<HTMLTextAreaElement>,
   nodes: MindMapNode[]
 ) {
   const [selectionState, setSelectionState] = useState<SelectionState>({

@@ -65,7 +65,7 @@ export function parseTextToNodes(text: string): MindMapNode[] {
   
   if (nodes.length > 0) {
     // Use new tree layout algorithm
-    layoutMindMap(nodes, nodeMap)
+    layoutMindMap(nodes)
   }
   
   return nodes
